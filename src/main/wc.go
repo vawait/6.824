@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"mapreduce"
 	"os"
+	"strconv"
 )
 
 //
@@ -15,6 +16,22 @@ import (
 //
 func mapF(filename string, contents string) []mapreduce.KeyValue {
 	// Your code here (Part II).
+	res := []mapreduce.KeyValue{}
+	word := ""
+	for _, c := range contents {
+		if c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' {
+			word = word + string(c)
+		} else {
+			if word != "" {
+				res = append(res, mapreduce.KeyValue{Key: word, Value: "1"})
+			}
+			word = ""
+		}
+	}
+	if word != "" {
+		res = append(res, mapreduce.KeyValue{Key: word, Value: "1"})
+	}
+	return res
 }
 
 //
@@ -24,6 +41,12 @@ func mapF(filename string, contents string) []mapreduce.KeyValue {
 //
 func reduceF(key string, values []string) string {
 	// Your code here (Part II).
+	sum := 0
+	for _, i := range values {
+		number, _ := strconv.Atoi(i)
+		sum = sum + number
+	}
+	return strconv.Itoa(sum)
 }
 
 // Can be run in 3 ways:
